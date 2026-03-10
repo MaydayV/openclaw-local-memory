@@ -1,0 +1,34 @@
+{
+  "agents": {
+    "defaults": {
+      "memorySearch": {
+        "enabled": true,
+        "provider": "ollama",
+        "fallback": "none",
+        "model": "qwen3-embedding:0.6b",
+        "chunking": {
+          "tokens": 200,
+          "overlap": 60
+        },
+        "query": {
+          "maxResults": 10,
+          "minScore": 0.25,
+          "hybrid": {
+            "enabled": true,
+            "vectorWeight": 0.6,
+            "textWeight": 0.4,
+            "candidateMultiplier": 8,
+            "mmr": {
+              "enabled": true,
+              "lambda": 0.7
+            },
+            "temporalDecay": {
+              "enabled": true,
+              "halfLifeDays": 60
+            }
+          }
+        }
+      }
+    }
+  }
+}
