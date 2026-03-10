@@ -116,13 +116,55 @@ if [ ! -f ~/.openclaw/openclaw.json ]; then
     exit 1
 fi
 
+# 检查是否已经配置了 memorySearch
+if grep -q '"memorySearch"' ~/.openclaw/openclaw.json; then
+    echo ""
+    echo "⚠️  检测到已有 memorySearch 配置"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    # 检查当前 provider
+    CURRENT_PROVIDER=$(grep -A 5 '"memorySearch"' ~/.openclaw/openclaw.json | grep '"provider"' | sed 's/.*"provider": "\([^"]*\)".*/\1/' | head -1)
+    
+    if [ ! -z "$CURRENT_PROVIDER" ]; then
+        echo "当前 provider: $CURRENT_PROVIDER"
+        echo ""
+        
+        if [ "$CURRENT_PROVIDER" != "ollama" ]; then
+            echo "⚠️  警告：你当前使用的是 $CURRENT_PROVIDER provider"
+            echo "继续安装会将其替换为 ollama (本地模型)"
+            echo ""
+            echo "如果你想保留当前配置，请选择 'n' 并手动配置"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            
+            read -p "是否继续并替换为 ollama？(y/n) " -n 1 -r
+            echo ""
+            
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo ""
+                echo "❌ 已取消配置"
+                echo ""
+                echo "你可以手动配置 Ollama 作为额外的 provider："
+                echo "1. 查看配置示例: cat config-example.json"
+                echo "2. 手动编辑配置: vim ~/.openclaw/openclaw.json"
+                echo ""
+                exit 0
+            fi
+        else
+            echo "✅ 当前已使用 ollama provider"
+            echo "将更新为最新的推荐配置"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        fi
+    fi
+fi
+
 echo ""
 echo "⚠️  重要提示："
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "1. 此操作会更新 OpenClaw 配置并重启服务"
 echo "2. 正在进行的对话可能会被中断"
 echo "3. 现有的对话记录和 memory 文件不会被删除或修改"
-echo "4. 只是添加本地记忆搜索配置，不影响现有数据"
+echo "4. 只是添加/更新本地记忆搜索配置，不影响现有数据"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
