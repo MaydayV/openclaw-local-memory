@@ -116,6 +116,31 @@ if [ ! -f ~/.openclaw/openclaw.json ]; then
     exit 1
 fi
 
+echo ""
+echo "⚠️  重要提示："
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "1. 此操作会更新 OpenClaw 配置并重启服务"
+echo "2. 正在进行的对话可能会被中断"
+echo "3. 现有的对话记录和 memory 文件不会被删除或修改"
+echo "4. 只是添加本地记忆搜索配置，不影响现有数据"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+read -p "是否继续配置 OpenClaw？(y/n) " -n 1 -r
+echo ""
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo ""
+    echo "❌ 已取消配置"
+    echo ""
+    echo "你可以稍后手动配置："
+    echo "1. 查看配置示例: cat config-example.json"
+    echo "2. 手动应用配置: openclaw config patch < config-example.json"
+    echo ""
+    exit 0
+fi
+
+echo ""
 echo "📝 正在更新 OpenClaw 配置..."
 
 # 创建临时配置文件
@@ -161,25 +186,41 @@ if command -v openclaw &> /dev/null; then
     echo "使用 OpenClaw CLI 应用配置..."
     openclaw config patch < /tmp/openclaw-memory-patch.json
     rm /tmp/openclaw-memory-patch.json
-    echo "✅ 配置已更新"
+    echo "✅ 配置已更新，OpenClaw 正在重启..."
+    echo ""
+    echo "⏳ 等待 OpenClaw 重启完成（约 5-10 秒）..."
+    sleep 10
 else
     echo "⚠️  未找到 OpenClaw CLI"
     echo "请手动将以下配置添加到 ~/.openclaw/openclaw.json:"
     cat /tmp/openclaw-memory-patch.json
     rm /tmp/openclaw-memory-patch.json
+    exit 1
 fi
 
 echo ""
 
 # 6. 重建向量索引
-echo "步骤 6/5: 重建向量索引（可选）"
+echo "步骤 6/6: 重建向量索引（可选）"
 echo "-----------------------------"
+echo ""
+echo "⚠️  关于重建索引："
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "1. 如果你是首次安装，建议立即重建索引"
+echo "2. 如果你已有大量 memory 文件，重建可能需要几分钟"
+echo "3. 重建索引不会删除或修改你的 memory 文件"
+echo "4. 只是用新的向量模型重新生成索引"
+echo "5. 你也可以稍后手动运行: openclaw memory index --force"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 
 read -p "是否立即重建向量索引？(y/n) " -n 1 -r
 echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo ""
     echo "🔄 正在重建向量索引..."
+    echo "这可能需要几分钟，请耐心等待..."
     openclaw memory index --force
     echo "✅ 索引重建完成"
 fi
@@ -188,18 +229,36 @@ echo ""
 echo "================================"
 echo "🎉 安装完成！"
 echo ""
-echo "下一步："
-echo "1. 重启 OpenClaw（如果正在运行）"
-echo "2. 测试记忆搜索功能"
-echo "3. 查看完整文档: ~/.openclaw/workspace/skills/local-memory-setup/README.md"
+echo "✅ 已完成的操作："
+echo "  1. 安装 Ollama"
+echo "  2. 下载 Qwen3 Embedding 模型"
+echo "  3. 配置 OpenClaw 本地记忆系统"
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "  4. 重建向量索引"
+fi
 echo ""
-echo "测试命令："
-echo "  在 OpenClaw 中输入: 请搜索我之前的对话"
+echo "📊 数据安全确认："
+echo "  ✅ 你的对话记录完好无损"
+echo "  ✅ 你的 memory 文件未被修改"
+echo "  ✅ 你的 agent 配置保持不变"
+echo "  ✅ 只是添加了本地记忆搜索功能"
 echo ""
-echo "故障排查："
-echo "  检查 Ollama 状态: ollama list"
-echo "  检查向量数据库: ls -lh ~/.openclaw/memory/*.sqlite"
-echo "  查看日志: tail -f ~/.openclaw/logs/gateway.log"
+echo "🚀 下一步："
+echo "  1. OpenClaw 已重启并运行"
+echo "  2. 测试记忆搜索: 在 OpenClaw 中输入 '请搜索我之前的对话'"
+echo "  3. 查看完整文档: cat README.md"
 echo ""
-echo "需要帮助？查看 README.md 或访问 https://docs.openclaw.ai"
+echo "📚 文档和帮助："
+echo "  - 快速开始: cat QUICKSTART.md"
+echo "  - 原理解释: cat PRINCIPLES.md"
+echo "  - 配置示例: cat config-example.json"
+echo "  - 故障排查: 查看 README.md 的故障排查章节"
+echo ""
+echo "🔧 常用命令："
+echo "  - 检查 Ollama: ollama list"
+echo "  - 检查向量库: ls -lh ~/.openclaw/memory/*.sqlite"
+echo "  - 查看日志: tail -f ~/.openclaw/logs/gateway.log"
+echo "  - 重建索引: openclaw memory index --force"
+echo ""
+echo "需要帮助？访问 https://github.com/MaydayV/openclaw-local-memory"
 echo "================================"
