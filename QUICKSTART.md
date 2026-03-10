@@ -6,10 +6,10 @@
 
 ```bash
 # 下载并运行安装脚本
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/openclaw-local-memory/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/MaydayV/openclaw-local-memory/main/install.sh | bash
 
 # 或者手动下载
-wget https://raw.githubusercontent.com/YOUR_USERNAME/openclaw-local-memory/main/install.sh
+wget https://raw.githubusercontent.com/MaydayV/openclaw-local-memory/main/install.sh
 chmod +x install.sh
 ./install.sh
 ```

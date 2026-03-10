@@ -16,7 +16,7 @@
 ### 一键安装
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/openclaw-local-memory/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/MaydayV/openclaw-local-memory/main/install.sh | bash
 ```
 
 ### 手动安装
