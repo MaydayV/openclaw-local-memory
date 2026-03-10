@@ -2,6 +2,15 @@
 
 OpenClaw 本地记忆系统配置指南 - 使用 Ollama + Qwen3 Embedding 实现完全本地化的语义搜索。
 
+## 🚀 配置方案
+
+本指南提供两种配置方案：
+
+- **[基础方案](README.md)**（本文档）：使用内置的 memory-core，适合入门和基本使用
+- **[进阶方案](ADVANCED.md)**：使用 memory-lancedb-pro 插件，提供混合检索、自动捕获、记忆反思等高级功能
+
+> 💡 **建议**：先完成基础方案配置，确保 Ollama 和 Qwen3 Embedding 正常工作后，再考虑升级到进阶方案。
+
 ## 📑 目录
 
 - [概述](#概述)
@@ -23,16 +32,19 @@ OpenClaw 本地记忆系统配置指南 - 使用 Ollama + Qwen3 Embedding 实现
 - [性能优化](#性能优化)
 - [最佳实践](#最佳实践)
 - [常见问题](#常见问题)
+- [进阶方案](#进阶方案)
 - [参考资源](#参考资源)
 
 ## 概述
 
-这个 skill 提供了完整的本地记忆系统配置方案，包括：
+这个 skill 提供了完整的本地记忆系统配置方案（基础版），包括：
 - Ollama 安装和配置
 - Qwen3 Embedding 模型部署
 - OpenClaw memory 配置
 - 向量检索优化
 - 故障排查
+
+**想要更强大的功能？** 查看 [进阶方案：memory-lancedb-pro](ADVANCED.md)
 
 ## 特性
 
@@ -688,12 +700,56 @@ A:
 3. 限制 Ollama 并发数
 4. 升级硬件（更快的 CPU/SSD）
 
+## 进阶方案
+
+如果你需要更强大的记忆系统功能，可以升级到 **memory-lancedb-pro** 插件：
+
+### 🎯 进阶方案的优势
+
+| 功能 | 基础方案 | 进阶方案 |
+|------|---------|---------|
+| 向量检索 | ✅ | ✅ |
+| BM25 全文检索 | ❌ | ✅ |
+| 混合检索（向量+BM25） | ❌ | ✅ |
+| 交叉编码器重排序 | ❌ | ✅ |
+| 自动捕获 | ❌ | ✅ |
+| 自动召回 | ❌ | ✅ |
+| 智能提取（6类） | ❌ | ✅ |
+| 记忆生命周期管理 | ❌ | ✅ |
+| 多作用域隔离 | ❌ | ✅ |
+| 记忆反思 | ❌ | ✅ |
+| 完整 CLI 工具 | ⚠️ 基础 | ✅ |
+
+### 📖 详细文档
+
+查看完整的进阶方案配置指南：**[ADVANCED.md](ADVANCED.md)**
+
+包含：
+- 详细的安装步骤
+- 完整的配置说明
+- 高级功能介绍
+- 故障排查指南
+- 最佳实践建议
+- 从基础方案迁移指南
+
+### 🚀 快速开始
+
+```bash
+# 1. 安装插件
+openclaw plugins install memory-lancedb-pro@beta
+
+# 2. 配置（见 ADVANCED.md）
+# 3. 重启 OpenClaw
+openclaw gateway restart
+```
+
 ## 参考资源
 
 - [Ollama 官方文档](https://github.com/ollama/ollama)
 - [Qwen3 模型介绍](https://huggingface.co/Qwen)
 - [OpenClaw 文档](https://docs.openclaw.ai)
 - [向量检索原理](https://www.pinecone.io/learn/vector-search/)
+- [memory-lancedb-pro GitHub](https://github.com/CortexReach/memory-lancedb-pro)
 
 ## 贡献
 
@@ -706,5 +762,5 @@ MIT License
 ---
 
 **作者：** 龙虾（OpenClaw AI Assistant）
-**版本：** 1.0.0
-**更新时间：** 2026-03-10
+**版本：** 1.1.0
+**更新时间：** 2026-03-11
